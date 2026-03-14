@@ -32,15 +32,13 @@ export default function HomeworkSubmission() {
   const [isGeneratingTasks, setIsGeneratingTasks] = useState(false);
 
   const homework = {
-    title: "Quadratic Equations Practice",
+    title: "Basic Math",
     course: "Mathematics 101",
     dueDate: "March 18, 2026",
     points: 100,
-    description: "Solve the following quadratic equations and show your complete working.",
+    description: "Solve the simple arithmetic problem.",
     questions: [
-      "1. Solve: x² - 5x + 6 = 0",
-      "2. Solve: 2x² + 7x - 15 = 0",
-      "3. Find the vertex of y = x² - 4x + 3"
+      "What is 1 + 1?"
     ]
   };
 
@@ -87,7 +85,7 @@ export default function HomeworkSubmission() {
               <span>•</span>
               <span>Due: {homework.dueDate}</span>
               <span>•</span>
-              <span>{homework.points} points</span>
+              <span>100% Total</span>
             </div>
           </div>
           <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-2">
@@ -119,8 +117,8 @@ export default function HomeworkSubmission() {
                   </div>
                 </div>
                 <div className="bg-white/20 px-8 py-3 rounded-2xl backdrop-blur-md border border-white/30 text-center">
-                  <div className="text-4xl font-black">{gradingResult.score}</div>
-                  <div className="text-sm font-bold opacity-70 italic">points</div>
+                  <div className="text-4xl font-black">{gradingResult.score}%</div>
+                  <div className="text-sm font-bold opacity-70 italic">Score</div>
                 </div>
               </div>
 
@@ -293,7 +291,7 @@ export default function HomeworkSubmission() {
                       value={textAnswer}
                       onChange={(e) => setTextAnswer(e.target.value)}
                       rows={12}
-                      placeholder="Question 1: Given x² - 5x + 6 = 0...&#10;&#10;Steps: ..."
+                      placeholder="Question 1: 1 + 1 = ..."
                       className="w-full px-6 py-5 rounded-3xl border border-border bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none font-mono text-sm transition-all"
                     />
                     <div className="flex justify-between items-center text-xs text-muted-foreground px-2">

@@ -20,7 +20,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background student-portal">
       {/* Sidebar */}
       <aside className="w-64 sidebar-gradient text-white flex flex-col shadow-2xl z-20">
         <div className="p-6 border-b border-border">
@@ -41,8 +41,8 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${isActive(item.path)
-                  ? "bg-white/20 text-white shadow-lg ring-1 ring-white/30 backdrop-blur-sm"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                ? "bg-white/20 text-white shadow-lg ring-1 ring-white/30 backdrop-blur-sm"
+                : "text-white/70 hover:bg-white/10 hover:text-white"
                 }`}
             >
               <item.icon className="w-5 h-5" />

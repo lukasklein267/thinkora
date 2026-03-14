@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import StudentLayout from "../components/StudentLayout";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
 import { BookOpen, CheckCircle, Clock, Circle, Lock, Award, Target, Video, Headphones, FileText, Image as ImageIcon, Send, Sparkles, Loader2, Gamepad2 } from "lucide-react";
@@ -18,6 +19,7 @@ type PersonalizedTask = {
   difficulty: string;
   completed: boolean;
   hobbyContext?: string;
+  concept?: string;
 };
 
 type Chapter = {
@@ -33,6 +35,7 @@ type Course = {
 };
 
 export default function StudentAnalytics() {
+  const navigate = useNavigate();
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedChapter, setSelectedChapter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +93,8 @@ export default function StudentAnalytics() {
         type: "text", // default
         difficulty: t.difficulty.toLowerCase(),
         completed: false,
-        hobbyContext: t.hobby
+        hobbyContext: t.hobby,
+        concept: t.concept
       })));
     } catch (e) {
       console.error("AI load failed", e);
@@ -113,7 +117,7 @@ export default function StudentAnalytics() {
       ],
     },
     level2: {
-      mastered: 2,
+      mastered: 0,
       total: 4,
       competencies: [
         { id: "2-1", text: "Solve complex linear systems", status: "mastered" as CompetencyStatus["status"] },
@@ -184,7 +188,7 @@ export default function StudentAnalytics() {
     currentLevelIndex = 1;
     currentLevelMastered = studentProgress.level2.mastered;
     currentLevelTotal = studentProgress.level2.total;
-    
+
     if (studentProgress.level2.mastered === studentProgress.level2.total) {
       currentLevelIndex = 2;
       currentLevelMastered = studentProgress.level3.mastered;
@@ -195,7 +199,7 @@ export default function StudentAnalytics() {
   // Calculate position: Level 1 is at 40%, Level 2 at 70%, Finish at 90%
   const levelPositions = [40, 70, 90];
   const startPosition = 0;
-  
+
   let visualProgressPercent = 0;
   if (currentLevelIndex === 0) {
     // Between Start (0) and L1 (10)
@@ -216,28 +220,28 @@ export default function StudentAnalytics() {
         <div className="absolute top-10 left-[10%] opacity-40"><div className="w-16 h-8 bg-white rounded-full blur-md"></div></div>
         <div className="absolute top-24 left-[30%] opacity-30"><div className="w-20 h-10 bg-white rounded-full blur-md"></div></div>
         <div className="absolute top-12 right-[15%] opacity-40"><div className="w-24 h-12 bg-white rounded-full blur-md"></div></div>
-        
+
         {/* Distant Hills */}
         <div className="absolute bottom-16 left-0 right-0 h-32 flex items-end">
           <div className="w-1/3 h-20 bg-emerald-600/20 rounded-t-full blur-xl translate-x-10"></div>
           <div className="w-1/2 h-24 bg-emerald-500/20 rounded-t-full blur-xl -translate-x-5"></div>
           <div className="w-1/3 h-16 bg-emerald-400/20 rounded-t-full blur-xl"></div>
         </div>
-        
+
         <div className="relative max-w-3xl mx-auto">
           {/* Ongoing Path Background (Gray/Unfinished) */}
           <div className="absolute top-1/2 left-0 right-[-10%] h-12 bg-gray-300 -translate-y-1/2 rounded-l-full shadow-inner border-b-4 border-gray-400/50"></div>
-          
+
           {/* Finished Part of the Path (Green) */}
-          <div 
+          <div
             className="absolute top-1/2 left-0 h-12 bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-400 -translate-y-1/2 rounded-l-full shadow-lg border-b-4 border-emerald-800/50 transition-all duration-1000 z-10"
             style={{ width: `${visualProgressPercent}%` }}
           ></div>
-          
+
           {/* Milestone Bases */}
           <div className="relative h-24 z-20">
             {/* Level 1 */}
-            <div 
+            <div
               className="absolute top-0 flex flex-col items-center -translate-x-1/2 transition-all duration-1000"
               style={{ left: `${levelPositions[0]}%` }}
             >
@@ -253,9 +257,9 @@ export default function StudentAnalytics() {
               </div>
               <span className="mt-4 font-black text-xs tracking-widest text-emerald-800 uppercase">Level 1</span>
             </div>
-            
+
             {/* Level 2 */}
-            <div 
+            <div
               className="absolute top-0 flex flex-col items-center -translate-x-1/2 transition-all duration-1000"
               style={{ left: `${levelPositions[1]}%` }}
             >
@@ -271,9 +275,9 @@ export default function StudentAnalytics() {
               </div>
               <span className="mt-4 font-black text-xs tracking-widest text-emerald-800 uppercase">Level 2</span>
             </div>
-            
+
             {/* Grand Finale */}
-            <div 
+            <div
               className="absolute top-0 flex flex-col items-center -translate-x-1/2 transition-all duration-1000"
               style={{ left: `${levelPositions[2]}%` }}
             >
@@ -293,9 +297,9 @@ export default function StudentAnalytics() {
           <div className={`absolute top-1/2 left-[80%] -translate-y-8 animate-pulse delay-150 text-xl transition-opacity ${visualProgressPercent > 80 ? "text-yellow-500" : "text-gray-300 opacity-50"}`}>⭐</div>
 
           {/* Player Character */}
-          <div 
+          <div
             className="absolute top-1/2 -mt-20 transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1) z-30"
-            style={{ 
+            style={{
               left: `calc(${visualProgressPercent}% - 48px)`,
             }}
           >
@@ -304,7 +308,7 @@ export default function StudentAnalytics() {
                 <Gamepad2 className="w-12 h-12 drop-shadow-lg" />
               </div>
               <div className="absolute -top-2 -right-2 bg-yellow-400 w-6 h-6 rounded-full border-2 border-white shadow-md animate-spin-slow"></div>
-              
+
               {/* Tooltip-like popup */}
               <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded-lg border-2 border-primary shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 <span className="text-sm font-bold text-primary">On my way! 🚀</span>
@@ -322,10 +326,10 @@ export default function StudentAnalytics() {
               <p className="text-xl font-black text-emerald-900 leading-none">{currentLevelMastered} / {currentLevelTotal}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3 px-6 py-3 bg-white/90 rounded-2xl border-b-4 border-sky-200 shadow-md transform rotate-1">
-             <div className="bg-sky-100 p-2 rounded-lg"><Target className="w-5 h-5 text-sky-500" /></div>
-             <div>
+            <div className="bg-sky-100 p-2 rounded-lg"><Target className="w-5 h-5 text-sky-500" /></div>
+            <div>
               <p className="text-[10px] font-black uppercase text-sky-600 tracking-tighter">Current Quest</p>
               <p className="text-base font-black text-emerald-900 leading-tight">{selectedChapterObj?.name}</p>
             </div>
@@ -396,22 +400,7 @@ export default function StudentAnalytics() {
 
         {showAnalytics && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20 p-6 flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl mb-2">{selectedChapterObj?.name}</h2>
-                <p className="text-muted-foreground">{selectedChapterObj?.description}</p>
-              </div>
-              {isLoading ? (
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              ) : (
-                <div className="bg-card rounded-xl px-4 py-2 border border-border">
-                  <p className="text-xs text-muted-foreground mb-1">Current Mastery</p>
-                  <p className="text-2xl text-secondary">
-                    {currentLevelMastered} / {currentLevelTotal}
-                  </p>
-                </div>
-              )}
-            </div>
+
 
             {/* Level Progression */}
             <div className="bg-card rounded-xl border border-border shadow-sm p-8">
@@ -550,7 +539,10 @@ export default function StudentAnalytics() {
                             )}
                           </div>
                         </div>
-                        <button className="ml-4 px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        <button
+                          onClick={() => navigate(`/student/task?concept=${encodeURIComponent(task.concept || "")}&hobby=${encodeURIComponent(task.hobbyContext || "")}`)}
+                          className="ml-4 px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2"
+                        >
                           <span className="text-sm font-medium">Start</span>
                           <Send className="w-4 h-4" />
                         </button>
@@ -574,7 +566,7 @@ export default function StudentAnalytics() {
                   </span>
                 )}
               </div>
-              
+
               {youngStudentsMode ? (
                 <MarioPathVisualization />
               ) : (
@@ -592,25 +584,6 @@ export default function StudentAnalytics() {
                   <div className="mt-6 text-center text-sm text-muted-foreground">Compare your performance with the class average for this chapter</div>
                 </>
               )}
-            </div>
-
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                <h3 className="text-sm text-muted-foreground mb-2">Level 1 Mastery</h3>
-                <p className="text-3xl mb-1 text-secondary">{Math.round((studentProgress.level1.mastered / studentProgress.level1.total) * 100)}%</p>
-                <p className="text-sm text-muted-foreground">{studentProgress.level1.mastered} of {studentProgress.level1.total} competencies</p>
-              </div>
-              <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                <h3 className="text-sm text-muted-foreground mb-2">Level 2 Mastery</h3>
-                <p className="text-3xl mb-1 text-accent">{Math.round((studentProgress.level2.mastered / studentProgress.level2.total) * 100)}%</p>
-                <p className="text-sm text-muted-foreground">{studentProgress.level2.mastered} of {studentProgress.level2.total} competencies</p>
-              </div>
-              <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                <h3 className="text-sm text-muted-foreground mb-2">Level 3 Mastery</h3>
-                <p className="text-3xl mb-1 text-destructive">{Math.round((studentProgress.level3.mastered / studentProgress.level3.total) * 100)}%</p>
-                <p className="text-sm text-muted-foreground">{studentProgress.level3.mastered} of {studentProgress.level3.total} competencies</p>
-              </div>
             </div>
           </div>
         )}
