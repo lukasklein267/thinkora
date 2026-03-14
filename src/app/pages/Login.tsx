@@ -46,10 +46,10 @@ export default function Login() {
               <Sparkles className="w-5 h-5" />
               <span className="text-sm">Adaptive Learning Platform</span>
             </div>
-            
+
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 mb-6">
               <h2 className="text-2xl mb-4">The First Platform That Truly Connects Students & Teachers</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="bg-white/20 p-2 rounded-lg mt-1">
@@ -118,11 +118,10 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setRole("student")}
-                className={`p-4 rounded-xl border-2 transition-all ${
-                  role === "student"
+                className={`p-4 rounded-xl border-2 transition-all ${role === "student"
                     ? "border-primary bg-primary/5 shadow-md"
                     : "border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
                 <GraduationCap className={`w-6 h-6 mb-2 mx-auto ${role === "student" ? "text-primary" : "text-muted-foreground"}`} />
                 <div className={role === "student" ? "text-primary" : "text-foreground"}>Student</div>
@@ -130,11 +129,10 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setRole("teacher")}
-                className={`p-4 rounded-xl border-2 transition-all ${
-                  role === "teacher"
+                className={`p-4 rounded-xl border-2 transition-all ${role === "teacher"
                     ? "border-primary bg-primary/5 shadow-md"
                     : "border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
                 <GraduationCap className={`w-6 h-6 mb-2 mx-auto ${role === "teacher" ? "text-primary" : "text-muted-foreground"}`} />
                 <div className={role === "teacher" ? "text-primary" : "text-foreground"}>Teacher</div>

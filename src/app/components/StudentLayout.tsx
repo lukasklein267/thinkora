@@ -14,7 +14,6 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/student/dashboard" },
     { icon: BarChart3, label: "My Analytics", path: "/student/analytics" },
-    { icon: BookOpen, label: "My Learning", path: "/student/learning" },
     { icon: Settings, label: "Settings", path: "/student/settings" },
   ];
 
@@ -41,11 +40,10 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                isActive(item.path)
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive(item.path)
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-foreground hover:bg-muted"
-              }`}
+                }`}
             >
               <item.icon className="w-5 h-5" />
               <span>{item.label}</span>
