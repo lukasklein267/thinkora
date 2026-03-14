@@ -23,12 +23,14 @@ export default function Analytics() {
   const [selectedForRadar, setSelectedForRadar] = useState<number | null>(null);
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedChapter, setSelectedChapter] = useState("");
   const [selectedStudentView, setSelectedStudentView] = useState("");
   const [showDetailedView, setShowDetailedView] = useState(false);
   const [errorPatterns, setErrorPatterns] = useState<ErrorPattern[]>([]);
   const [analyzingErrors, setAnalyzingErrors] = useState(false);
   const [visibleLayers, setVisibleLayers] = useState({
     classAvg: true,
+    student: true,
     best: true,
     worst: true,
   });
@@ -59,6 +61,17 @@ export default function Analytics() {
 
   const filteredCourses = selectedClass
     ? courses.filter((c) => c.classId === Number(selectedClass))
+    : [];
+
+  const chapters = [
+    { id: 1, courseId: 1, name: "Equations & Inequalities" },
+    { id: 2, courseId: 1, name: "Functions" },
+    { id: 3, courseId: 2, name: "Triangle Properties" },
+    { id: 4, courseId: 4, name: "Newton's Laws" },
+  ];
+
+  const filteredChapters = selectedCourse
+    ? chapters.filter((ch) => ch.courseId === Number(selectedCourse))
     : [];
 
   const conceptData = [
@@ -212,7 +225,7 @@ export default function Analytics() {
     setVisibleLayers({ ...visibleLayers, [layer]: !visibleLayers[layer] });
   };
 
-  const showAnalytics = selectedClass && selectedCourse;
+  const showAnalytics = selectedClass && selectedCourse && selectedChapter;
   const currentStudent = students.find((s) => s.id === Number(selectedStudentView));
 
   const isLevel1Complete = currentStudent ? currentStudent.level1.mastered === currentStudent.level1.total : false;
@@ -253,15 +266,16 @@ export default function Analytics() {
         </div>
 
         {/* Selectors Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div>
-            <label className="block text-sm mb-2">Select Class</label>
+            <label className="block text-sm mb-2 font-medium">Select Class</label>
             <select
-              className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm"
               value={selectedClass}
               onChange={(e) => {
                 setSelectedClass(e.target.value);
                 setSelectedCourse("");
+                setSelectedChapter("");
               }}
             >
               <option value="">Select a Class</option>
@@ -272,11 +286,14 @@ export default function Analytics() {
           </div>
 
           <div>
-            <label className="block text-sm mb-2">Select Course</label>
+            <label className="block text-sm mb-2 font-medium">Select Course</label>
             <select
-              className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm"
               value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
+              onChange={(e) => {
+                setSelectedCourse(e.target.value);
+                setSelectedChapter("");
+              }}
               disabled={!selectedClass}
             >
               <option value="">Select a Course</option>
@@ -287,23 +304,38 @@ export default function Analytics() {
           </div>
 
           <div>
-            <label className="block text-sm mb-2">View Mode</label>
-            <div className="flex bg-muted rounded-xl p-1">
+            <label className="block text-sm mb-2 font-medium">Select Chapter</label>
+            <select
+              className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm"
+              value={selectedChapter}
+              onChange={(e) => setSelectedChapter(e.target.value)}
+              disabled={!selectedCourse}
+            >
+              <option value="">Select a Chapter</option>
+              {filteredChapters.map((ch) => (
+                <option key={ch.id} value={ch.id}>{ch.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm mb-2 font-medium">View Mode</label>
+            <div className="flex bg-muted rounded-xl p-1 border border-border">
               <button
                 onClick={() => { setViewMode("class"); setSelectedStudentView(""); }}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all ${viewMode === "class" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all ${viewMode === "class" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:text-foreground"
                   }`}
               >
                 <Users className="w-4 h-4" />
-                <span>Class View</span>
+                <span className="text-sm">Class View</span>
               </button>
               <button
                 onClick={() => setViewMode("student")}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all ${viewMode === "student" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all ${viewMode === "student" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:text-foreground"
                   }`}
               >
                 <User className="w-4 h-4" />
-                <span>Student View</span>
+                <span className="text-sm">Student View</span>
               </button>
             </div>
           </div>
@@ -348,8 +380,8 @@ export default function Analytics() {
             <div className="bg-muted rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-10 h-10 text-muted-foreground" />
             </div>
-            <h3 className="text-xl mb-2">No Analytics Selected</h3>
-            <p className="text-muted-foreground">Select a class and a course to view analytics.</p>
+            <h3 className="text-xl mb-2">Selection Required</h3>
+            <p className="text-muted-foreground">Select a class, a course, and a chapter to view analytics.</p>
           </div>
         )}
 
@@ -357,16 +389,20 @@ export default function Analytics() {
           <div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-card rounded-xl border border-border shadow-sm p-6">
-                <h2 className="text-xl mb-6">Concept Mastery Analysis</h2>
-                <ResponsiveContainer width="100%" height={400}>
-                  <RadarChart data={conceptData}>
+                <h2 className="text-xl mb-6">Concept Level Analysis</h2>
+                <ResponsiveContainer width="100%" height={500}>
+                  <RadarChart
+                    data={conceptData}
+                    margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
+                    outerRadius="80%"
+                  >
                     <PolarGrid stroke="#e5e7eb" />
                     <PolarAngleAxis dataKey="concept" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6b7280' }} />
+                    <PolarRadiusAxis angle={45} domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 10 }} axisLine={false} />
                     {visibleLayers.classAvg && <Radar key="classAvg" name="Class Average" dataKey="classAvg" stroke="#6366F1" fill="#6366F1" fillOpacity={0.2} strokeWidth={2} />}
                     {visibleLayers.best && <Radar key="best" name="Best Student" dataKey="best" stroke="#22C55E" fill="#22C55E" fillOpacity={0.15} strokeWidth={2} />}
                     {visibleLayers.worst && <Radar key="worst" name="Worst Student" dataKey="worst" stroke="#ef4444" fill="#ef4444" fillOpacity={0.15} strokeWidth={2} />}
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
                   </RadarChart>
                 </ResponsiveContainer>
 
@@ -396,13 +432,19 @@ export default function Analytics() {
                     <div key={student.id} className="p-3 rounded-xl bg-muted border-2 border-transparent">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm">{student.name}</span>
-                        {student.trend === "up" ? <TrendingUp className="w-4 h-4 text-secondary" /> : student.trend === "down" ? <TrendingDown className="w-4 h-4 text-destructive" /> : null}
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Mastery: {student.mastery}%</span>
-                        <span className="text-xs">{student.score}%</span>
+                        <span className="text-xs text-muted-foreground">
+                          Level {student.level2.mastered === student.level2.total ? 3 : (student.level1.mastered === student.level1.total ? 2 : 1)}
+                        </span>
+                        <span className="text-xs font-semibold">{student.score}/100</span>
                       </div>
-                      <div className="mt-2 w-full bg-background rounded-full h-1.5"><div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${student.mastery}%` }} /></div>
+                      <div className="mt-2 w-full bg-background rounded-full h-1.5 overflow-hidden">
+                        <div
+                          className="bg-primary h-1.5 rounded-full transition-all"
+                          style={{ width: `${student.score}%` }}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -453,7 +495,7 @@ export default function Analytics() {
                 </div>
               ) : (
                 <div className="py-8 text-center text-muted-foreground border border-dashed border-border rounded-xl">
-                  Select a class and course to perform AI analysis
+                  Select a class, course, and chapter to perform AI analysis
                 </div>
               )}
             </div>
@@ -482,19 +524,6 @@ export default function Analytics() {
                 <div>
                   <h2 className="text-2xl mb-1">{currentStudent.name}</h2>
                   <p className="text-muted-foreground">Quick Overview</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {currentStudent.trend === "up" ? (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">Improving</span>
-                    </div>
-                  ) : currentStudent.trend === "down" ? (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-destructive/10 text-destructive rounded-full">
-                      <TrendingDown className="w-4 h-4" />
-                      <span className="text-sm">Needs Attention</span>
-                    </div>
-                  ) : null}
                 </div>
               </div>
 
@@ -535,7 +564,7 @@ export default function Analytics() {
                   </div>
 
                   <div className="bg-card rounded-xl p-4 border border-border">
-                    <p className="text-xs text-muted-foreground mb-1">Course Average</p>
+                    <p className="text-xs text-muted-foreground mb-1">Overall Score</p>
                     <p className="text-2xl text-primary">{currentStudent.score}%</p>
                   </div>
                 </div>
@@ -543,18 +572,28 @@ export default function Analytics() {
                 {/* Right: Mini Radar Chart */}
                 <div className="bg-card rounded-xl p-4 border border-border">
                   <p className="text-xs text-muted-foreground mb-3">Competency Radar</p>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <RadarChart data={conceptData}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <RadarChart data={conceptData} margin={{ top: 10, right: 20, bottom: 5, left: 20 }} outerRadius="80%">
                       <PolarGrid stroke="#e5e7eb" />
                       <PolarAngleAxis dataKey="concept" tick={{ fontSize: 10 }} />
-                      <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} />
+                      <PolarRadiusAxis angle={45} domain={[0, 100]} tick={false} />
                       <Radar
                         name={currentStudent.name}
                         dataKey="student"
+                        stroke="#F59E0B"
+                        fill="#F59E0B"
+                        fillOpacity={0.3}
+                        strokeWidth={2}
+                      />
+                      <Radar
+                        name="Class Average"
+                        dataKey="classAvg"
                         stroke="#6366F1"
                         fill="#6366F1"
-                        fillOpacity={0.3}
+                        fillOpacity={0.1}
+                        strokeWidth={2}
                       />
+                      <Legend wrapperStyle={{ paddingTop: '10px', fontSize: '10px' }} />
                     </RadarChart>
                   </ResponsiveContainer>
                 </div>
@@ -574,66 +613,6 @@ export default function Analytics() {
               </button>
             </div>
 
-            {/* Personalized Feedback Section */}
-            <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <MessageSquare className="w-5 h-5 text-primary" />
-                <h2 className="text-xl">Send Personalized Feedback</h2>
-              </div>
-              
-              {showFeedbackSuccess ? (
-                <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-6 text-center animate-in fade-in zoom-in duration-300">
-                  <div className="bg-secondary/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-6 h-6 text-secondary" />
-                  </div>
-                  <h3 className="text-lg font-medium text-secondary mb-1">Feedback Sent!</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Your feedback has been shared with {currentStudent.name}.
-                  </p>
-                  <button 
-                    onClick={() => {
-                      setShowFeedbackSuccess(false);
-                      setFeedbackText("");
-                    }}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Send another message
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <textarea
-                    rows={3}
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    placeholder={`Write a message to support ${currentStudent.name}'s progression...`}
-                    className="w-full px-4 py-3 rounded-xl border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                  />
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => {
-                        if (!feedbackText.trim()) return;
-                        setIsSendingFeedback(true);
-                        // Mock sending
-                        setTimeout(() => {
-                          setIsSendingFeedback(false);
-                          setShowFeedbackSuccess(true);
-                        }, 1000);
-                      }}
-                      disabled={isSendingFeedback || !feedbackText.trim()}
-                      className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSendingFeedback ? (
-                        <Clock className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Send className="w-4 h-4" />
-                      )}
-                      <span>{isSendingFeedback ? "Sending..." : "Send Feedback"}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* Detailed View (conditionally shown) */}
             {showDetailedView && (
@@ -878,85 +857,72 @@ export default function Analytics() {
                   </div>
                 </div>
 
-                {/* Individual Radar Chart for Student */}
-                <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                  <h2 className="text-xl mb-6">{currentStudent.name}'s Competency Mastery</h2>
 
-                  <ResponsiveContainer width="100%" height={400}>
-                    <RadarChart data={conceptData}>
-                      <PolarGrid stroke="#e5e7eb" />
-                      <PolarAngleAxis
-                        dataKey="concept"
-                        tick={{ fill: '#6b7280', fontSize: 12 }}
-                      />
-                      <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6b7280' }} />
-
-                      <Radar
-                        name={currentStudent.name}
-                        dataKey="student"
-                        stroke="#F59E0B"
-                        fill="#F59E0B"
-                        fillOpacity={0.3}
-                        strokeWidth={3}
-                      />
-
-                      <Radar
-                        name="Class Average"
-                        dataKey="classAvg"
-                        stroke="#6366F1"
-                        fill="#6366F1"
-                        fillOpacity={0.1}
-                        strokeWidth={2}
-                      />
-
-                      <Legend />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Summary Cards */}
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                    <h3 className="text-sm text-muted-foreground mb-2">Level 1 Mastery</h3>
-                    <p className="text-3xl mb-1">
-                      {Math.round(
-                        (currentStudent.level1.mastered / currentStudent.level1.total) * 100
-                      )}
-                      %
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {currentStudent.level1.mastered} of {currentStudent.level1.total} competencies
-                    </p>
-                  </div>
-
-                  <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                    <h3 className="text-sm text-muted-foreground mb-2">Level 2 Mastery</h3>
-                    <p className="text-3xl mb-1">
-                      {Math.round(
-                        (currentStudent.level2.mastered / currentStudent.level2.total) * 100
-                      )}
-                      %
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {currentStudent.level2.mastered} of {currentStudent.level2.total} competencies
-                    </p>
-                  </div>
-
-                  <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-                    <h3 className="text-sm text-muted-foreground mb-2">Level 3 Mastery</h3>
-                    <p className="text-3xl mb-1">
-                      {Math.round(
-                        (currentStudent.level3.mastered / currentStudent.level3.total) * 100
-                      )}
-                      %
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {currentStudent.level3.mastered} of {currentStudent.level3.total} competencies
-                    </p>
-                  </div>
-                </div>
               </>
             )}
+
+            {/* Personalized Feedback Section (At the bottom) */}
+            <div className="bg-card rounded-xl border border-border shadow-md p-6 mt-8 premium-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <MessageSquare className="w-5 h-5 text-primary" />
+                </div>
+                <h2 className="text-xl font-bold font-display">Send Personalized Feedback</h2>
+              </div>
+
+              {showFeedbackSuccess ? (
+                <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-6 text-center animate-in fade-in zoom-in duration-300 text-secondary">
+                  <div className="bg-secondary/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                    <CheckCircle className="w-6 h-6 shrink-0" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-1">Feedback Sent!</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Your message has been shared with {currentStudent.name}.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setShowFeedbackSuccess(false);
+                      setFeedbackText("");
+                    }}
+                    className="text-sm font-semibold text-primary hover:text-primary/80 underline decoration-2 underline-offset-4"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <textarea
+                    rows={3}
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    placeholder={`Write a message to encourage ${currentStudent.name}'s progression...`}
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-all placeholder:text-muted-foreground/50 shadow-inner"
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        if (!feedbackText.trim()) return;
+                        setIsSendingFeedback(true);
+                        // Mock sending
+                        setTimeout(() => {
+                          setIsSendingFeedback(false);
+                          setShowFeedbackSuccess(true);
+                        }, 1000);
+                      }}
+                      disabled={isSendingFeedback || !feedbackText.trim()}
+                      className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
+                    >
+                      {isSendingFeedback ? (
+                        <Clock className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      )}
+                      <span className="font-bold tracking-tight">{isSendingFeedback ? "Sending..." : "Send Feedback"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
