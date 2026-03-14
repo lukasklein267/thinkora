@@ -11,7 +11,7 @@ function parseJSON(text: string) {
     // Attempt to extract JSON from model response
     const jsonStart = Math.max(text.indexOf("{"), text.indexOf("["));
     const jsonEnd = Math.max(text.lastIndexOf("}"), text.lastIndexOf("]"));
-    
+
     if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
       const extracted = text.substring(jsonStart, jsonEnd + 1);
       try {
@@ -129,12 +129,15 @@ export async function gradeHomework(homeworkTitle: string, description: string, 
     
     Provide a pedagogical evaluation focusing on reasoning, method, and correctness.
     
+    IMPORTANT: The "feedback" and "correctness" fields MUST be hint-based. 
+    Do NOT tell the student the exact answer. Instead, guide them with hints, identify where they might have gone wrong, and encourage them to find the solution.
+    
     Return the response as a JSON object with this structure:
     {
       "score": number (0-100),
-      "feedback": "detailed pedagogical feedback",
+      "feedback": "detailed pedagogical feedback (hints only, no direct answers)",
       "areasOfImprovement": ["point 1", "point 2"],
-      "correctness": "summary of what was correct and what was not"
+      "correctness": "summary of what was correct and hints for what was not"
     }
     Format the response as pure JSON without markdown code blocks.
   `;

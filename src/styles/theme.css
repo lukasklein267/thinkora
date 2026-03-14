@@ -1,6 +1,7 @@
 @custom-variant dark (&:is(.dark *));
 
-:root {
+:root,
+.teacher-portal {
   --font-size: 16px;
   --background: #F0F7FF;
   --foreground: #1e293b;
@@ -42,6 +43,22 @@
   --sidebar-ring: #2563EB;
   --sidebar-deep: #1e3a8a;
   --sidebar-deep-foreground: #ffffff;
+}
+
+.student-portal {
+  --primary: #8B5CF6;
+  /* Violet */
+  --primary-foreground: #ffffff;
+  --sidebar-deep: #1E1B4B;
+  /* Deep Navy/Indigo */
+  --sidebar-primary: #8B5CF6;
+  --background: #F8FBFF;
+  --accent: #ec4899;
+  /* Pink */
+  --ring: #8B5CF6;
+  --sidebar-ring: #8B5CF6;
+  --chart-1: #8B5CF6;
+  --chart-3: #ec4899;
 }
 
 .dark {
@@ -194,7 +211,7 @@
 }
 
 .premium-shadow {
-  box-shadow: 
+  box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.05),
     0 4px 6px -2px rgba(0, 0, 0, 0.02),
     0 0 0 1px rgba(0, 0, 0, 0.01);
@@ -202,4 +219,4 @@
 
 .sidebar-gradient {
   background: linear-gradient(180deg, var(--sidebar-deep) 0%, #1e40af 100%);
-}
+}
