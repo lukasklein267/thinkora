@@ -73,38 +73,42 @@ export default function TeacherDashboard() {
           <p className="text-muted-foreground">Welcome back! Here's your overview</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* AI Insights Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-primary/10 p-3 rounded-xl">
-                <BookOpen className="w-6 h-6 text-primary" />
+          {aiInsights.map((item, index) => (
+            <div
+              key={index}
+              className={`p-6 rounded-xl border border-border shadow-sm flex flex-col justify-between ${item.severity === "high"
+                  ? "bg-red-50 border-red-200"
+                  : item.severity === "positive"
+                    ? "bg-green-50 border-green-200"
+                    : "bg-amber-50 border-amber-200"
+                }`}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2 rounded-lg ${item.severity === "high"
+                    ? "bg-red-100 text-red-600"
+                    : item.severity === "positive"
+                      ? "bg-green-100 text-secondary"
+                      : "bg-amber-100 text-accent"
+                  }`}>
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <span className={`text-xs font-semibold uppercase tracking-wider ${item.severity === "high"
+                    ? "text-red-700"
+                    : item.severity === "positive"
+                      ? "text-secondary"
+                      : "text-accent-foreground"
+                  }`}>
+                  {item.severity} insight
+                </span>
+              </div>
+              <div>
+                <p className="text-sm mb-1 font-medium">{item.insight}</p>
+                <p className="text-xs text-muted-foreground">{item.class}</p>
               </div>
             </div>
-            <div className="text-2xl mb-1">3</div>
-            <div className="text-sm text-muted-foreground">Active Classes</div>
-          </div>
-
-          <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-secondary/10 p-3 rounded-xl">
-                <Users className="w-6 h-6 text-secondary" />
-              </div>
-            </div>
-            <div className="text-2xl mb-1">84</div>
-            <div className="text-sm text-muted-foreground">Total Students</div>
-          </div>
-
-
-          <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-purple-100 p-3 rounded-xl">
-                <Sparkles className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-            <div className="text-2xl mb-1">156</div>
-            <div className="text-sm text-muted-foreground">AI Insights Generated</div>
-          </div>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -158,38 +162,39 @@ export default function TeacherDashboard() {
             </div>
           </div>
 
-          {/* AI Insights */}
-          <div>
-            <h2 className="text-xl mb-4">AI Insights</h2>
-            <div className="space-y-4">
-              {aiInsights.map((item, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-xl border-l-4 ${
-                    item.severity === "high"
-                      ? "bg-red-50 border-red-500"
-                      : item.severity === "positive"
-                      ? "bg-green-50 border-secondary"
-                      : "bg-amber-50 border-accent"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Sparkles
-                      className={`w-5 h-5 mt-0.5 ${
-                        item.severity === "high"
-                          ? "text-red-600"
-                          : item.severity === "positive"
-                          ? "text-secondary"
-                          : "text-accent"
-                      }`}
-                    />
-                    <div>
-                      <p className="text-sm mb-1">{item.insight}</p>
-                      <p className="text-xs text-muted-foreground">{item.class}</p>
-                    </div>
+          {/* Stats Sidebar */}
+          <div className="space-y-6">
+            <h2 className="text-xl mb-4">Quick Stats</h2>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-primary/10 p-3 rounded-xl">
+                    <BookOpen className="w-6 h-6 text-primary" />
                   </div>
                 </div>
-              ))}
+                <div className="text-2xl mb-1">3</div>
+                <div className="text-sm text-muted-foreground">Active Classes</div>
+              </div>
+
+              <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-secondary/10 p-3 rounded-xl">
+                    <Users className="w-6 h-6 text-secondary" />
+                  </div>
+                </div>
+                <div className="text-2xl mb-1">84</div>
+                <div className="text-sm text-muted-foreground">Total Students</div>
+              </div>
+
+              <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-purple-100 p-3 rounded-xl">
+                    <Sparkles className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+                <div className="text-2xl mb-1">156</div>
+                <div className="text-sm text-muted-foreground">AI Insights Generated</div>
+              </div>
             </div>
           </div>
         </div>
