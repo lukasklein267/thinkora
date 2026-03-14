@@ -23,6 +23,7 @@ build_log.txt
 
 # Local env files
 .env*.local
+.env
 
 # Typescript
 *.tsbuildinfo
