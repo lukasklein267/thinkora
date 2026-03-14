@@ -145,7 +145,7 @@ export default function CourseAnalysis() {
           <div>
             <h1 className="text-3xl mb-2">Course Analysis</h1>
             <p className="text-muted-foreground">
-              Track student mastery progression across knowledge levels
+              Track student level progression across knowledge levels
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -345,26 +345,6 @@ export default function CourseAnalysis() {
           </div>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-            <h3 className="text-sm text-muted-foreground mb-2">Level 1 Mastery</h3>
-            <p className="text-3xl mb-1">{Math.round((currentStudent.level1.mastered / currentStudent.level1.total) * 100)}%</p>
-            <p className="text-sm text-muted-foreground">{currentStudent.level1.mastered} of {currentStudent.level1.total} competencies</p>
-          </div>
-
-          <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-            <h3 className="text-sm text-muted-foreground mb-2">Level 2 Mastery</h3>
-            <p className="text-3xl mb-1">{Math.round((currentStudent.level2.mastered / currentStudent.level2.total) * 100)}%</p>
-            <p className="text-sm text-muted-foreground">{currentStudent.level2.mastered} of {currentStudent.level2.total} competencies</p>
-          </div>
-
-          <div className="bg-card rounded-xl border border-border shadow-sm p-6">
-            <h3 className="text-sm text-muted-foreground mb-2">Level 3 Mastery</h3>
-            <p className="text-3xl mb-1">{Math.round((currentStudent.level3.mastered / currentStudent.level3.total) * 100)}%</p>
-            <p className="text-sm text-muted-foreground">{currentStudent.level3.mastered} of {currentStudent.level3.total} competencies</p>
-          </div>
-        </div>
       </div>
     </TeacherLayout>
   );
