@@ -1,3 +1,4 @@
+To test the app locally, add a gemini api key to the .env file
 
   # Educational Platform Development
 
